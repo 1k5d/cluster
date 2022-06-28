@@ -6,18 +6,18 @@
 
 //#define dimension 1
 //#define number_of_dots 1000
-//#define N1 3
-//#define N2 3
+//#define N1 6
+//#define N2 6
 
-//#define dimension 2
-//#define number_of_dots 100000
+#define dimension 2
+#define number_of_dots 100000
+#define N1 40
+#define N2 300
+
+//#define dimension 3
+//#define number_of_dots 1000000
 //#define N1 40
 //#define N2 300
-
-#define dimension 3
-#define number_of_dots 1000000
-#define N1 60
-#define N2 400
 
 int read_input (double values[])
 {
@@ -87,7 +87,7 @@ int init3 (double main_array[], double shell, int neighbors[][N1], int neighbors
 int add1 (double main_array[], double shell, int neighbors[][N1]);
 int add2 (double main_array[], double average_radius, double shell, int neighbors[][N1], int neighbors2[][N2]);
 int add3 (double main_array[], double average_radius, double shell, int neighbors[][N1], int neighbors2[][N2]);
-int generate_cluster (double main_array[], double average_radius, double shell, int neighbors[][N1], int neighbors2[][N2])
+int generate_cluster (double main_array[], double average_radius, double shell, int neighbors[][N1], int neighbors2[][N2], double values[])
 {
 //	std::cout << "generate_cluster" << std::endl;
 	double t0 = time(NULL); //время начала работы функции
@@ -124,8 +124,10 @@ int generate_cluster (double main_array[], double average_radius, double shell, 
 		init3 (main_array, shell, neighbors, neighbors2);
 		while (add3 (main_array, average_radius, shell, neighbors, neighbors2));
 	}
-/*	FILE *fpdb;
-	if ((fpdb = fopen ("cluster.pdb", "wt")) != NULL)
+	FILE *fpdb;
+	char name_file_pdb[100];
+	sprintf (name_file_pdb, "pdb-dim=%d-r=%.3f-sig=%.0f-l=%.0f-k=%.0f-phi=%.1f-vphi=%.2f.pdb", dimension, values[0], values[1], values[2], values[3], values[4], values[5]);
+	if ((fpdb = fopen (name_file_pdb, "wt")) != NULL)
 	{
 		for (int i = 0; i < main_array[0]; i++)
 		{
@@ -134,22 +136,70 @@ int generate_cluster (double main_array[], double average_radius, double shell, 
 	}
 	fclose (fpdb);
 	//std::cout << "generate cluster finished for " << time(NULL)-t0 << " sec" << std::endl;
-*/	return 0;
+	return 0;
 }
 
 int init1 (double main_array[], double shell, int neighbors[][N1])
 {
-	main_array[3] = 0.0; //Х координата первой точки
+	main_array[3] = 0.0; //Х координата первой точки -0- расположение точек
 	main_array[4] = 0.0; //Y координата первой точки
 	main_array[5] = 0.0; //Z координата первой точки
 	main_array[9] = main_array[2] + main_array[8] + shell*2.; //X координата второй точки
-	main_array[10] = 0.; //Y координата второй точки
+	main_array[10] = 0.; //Y координата второй точки -0-1-
 	main_array[11] = 0.; //Z координата второй точки
-	main_array[0] = 2; //Общее количество точек на текущий момент, для которых вычислены координаты
-	neighbors[0][0] = 1; //У первой частицы 1 сосед
-	neighbors[0][1] = 1; //Номер соседа 1
-	neighbors[1][0] = 1; //У второй частицы 1 сосед
-	neighbors[1][1] = 0; //Номер соседа 0
+	main_array[15] = - main_array[2] - main_array[14] - shell*2.; //X третьей точки -2-0-1-
+	main_array[16] = 0.0; //Y координата третьей точки
+	main_array[17] = 0.0; //Z координата третьей точки
+	main_array[21] = main_array[9] + main_array[8] + main_array[20] + shell*2.; //-2-0-1-3-
+	main_array[22] = 0.0; //Y координата четвёртой точки
+	main_array[23] = 0.0; //Z координата четвёртой точки
+	main_array[27] = main_array[15] - main_array[14] - main_array[26] - shell*2.; //-4-2-0-1-3-
+	main_array[28] = 0.0; //Y координата пятой точки
+	main_array[29] = 0.0; //Z координата пятой точки
+	main_array[33] = main_array[21] + main_array[20] + main_array[32] + shell*2.; //-4-2-0-1-3-5-
+	main_array[34] = 0.0; //Y координата шестой точки
+	main_array[35] = 0.0; //Z координата шестой точки
+	main_array[39] = main_array[27] - main_array[26] - main_array[38] - shell*2.; //-6-4-2-0-1-3-5-
+	main_array[40] = 0.0; //Y координата седьмой точки
+	main_array[41] = 0.0; //Z координата седьмой точки
+	main_array[0] = 7; //Общее количество точек на текущий момент, для которых вычислены координаты
+	neighbors[0][0] = 6; //У первой частицы 6 соседей
+	neighbors[0][1] = 1; //Номер соседа
+	neighbors[0][2] = 2; //Номер соседа
+	neighbors[0][3] = 3; //Номер соседа
+	neighbors[0][4] = 4; //Номер соседа
+	neighbors[0][5] = 5; //Номер соседа
+	neighbors[0][6] = 6; //Номер соседа
+	neighbors[1][0] = 5; //У второй частицы 5 соседей
+	neighbors[1][1] = 0; //Номер соседа
+	neighbors[1][2] = 3; //Номер соседа
+	neighbors[1][3] = 2; //Номер соседа
+	neighbors[1][4] = 5; //Номер соседа
+	neighbors[1][5] = 4; //Номер соседа
+	neighbors[2][0] = 5; //У третьей частицы 5 соседей
+	neighbors[2][1] = 0; //Номер соседа
+	neighbors[2][2] = 1; //Номер соседа
+	neighbors[2][3] = 3; //Номер соседа
+	neighbors[2][4] = 4; //Номер соседа
+	neighbors[2][5] = 6; //Номер соседа
+	neighbors[3][0] = 4; //У четвёртой частицы 4 соседа
+	neighbors[3][1] = 1; //Номер соседа
+	neighbors[3][2] = 5; //Номер соседа
+	neighbors[3][3] = 0; //Номер соседа
+	neighbors[3][4] = 2; //Номер соседа
+	neighbors[4][0] = 4; //У пятой частицы 4 соседа
+	neighbors[4][1] = 2; //Номер соседа
+	neighbors[4][2] = 6; //Номер соседа
+	neighbors[4][3] = 0; //Номер соседа
+	neighbors[4][4] = 1; //Номер соседа
+	neighbors[5][0] = 3; //У шестой частицы 3 соседа
+	neighbors[5][1] = 3; //Номер соседа
+	neighbors[5][2] = 1; //Номер соседа
+	neighbors[5][3] = 0; //Номер соседа
+	neighbors[6][0] = 3; //У седьмой частицы 3 соседа
+	neighbors[6][1] = 4; //Номер соседа
+	neighbors[6][2] = 2; //Номер соседа
+	neighbors[6][3] = 0; //Номер соседа
 	return 0;
 }
 
@@ -218,29 +268,41 @@ int add1 (double main_array[], double shell, int neighbors[][N1])
 	}
 	int i = main_array[0];
 	//Добавляется сразу 2 частицы
-	//Первая из добавляемых частиц пристраивается слева от самой левой частицы
-	main_array[i*6+3] = main_array[(i-2)*6+3]-main_array[(i-2)*6+2]-main_array[i*6+2]-shell*2.;
-	main_array[i*6+4] = 0.0;
-	main_array[i*6+5] = 0.0;
-	main_array[0]++;
-	neighbors[i-2][0]++;
-	neighbors[i-2][2] = i;
-	neighbors[i][0] = 1;
-	neighbors[i][1] = i-2;
-	if (main_array[0] == number_of_dots)
-	{
-		return 0;
-	}
-	i = main_array[0];
-	//Вторая из добавляемых частиц пристраивается справа от самой правой частицы
+	//Первая из добавляемых частиц пристраивается справа от самой правой частицы
 	main_array[i*6+3] = main_array[(i-2)*6+3]+main_array[(i-2)*6+2]+main_array[i*6+2]+shell*2.;
 	main_array[i*6+4] = 0.0;
 	main_array[i*6+5] = 0.0;
 	main_array[0]++;
 	neighbors[i-2][0]++;
-	neighbors[i-2][2] = i;
-	neighbors[i][0] = 1;
+	neighbors[i-4][0]++;
+	neighbors[i-6][0]++;
+	neighbors[i-2][4] = i;
+	neighbors[i-4][5] = i;
+	neighbors[i-6][6] = i;
+	neighbors[i][0] = 3;
 	neighbors[i][1] = i-2;
+	neighbors[i][2] = i-4;
+	neighbors[i][3] = i-6;
+	if (main_array[0] == number_of_dots)
+	{
+		return 0;
+	}
+	i = main_array[0];
+	//Вторая из добавляемых частиц пристраивается слева от самой левой частицы
+	main_array[i*6+3] = -main_array[(i-2)*6+3]-main_array[(i-2)*6+2]-main_array[i*6+2]-shell*2.;
+	main_array[i*6+4] = 0.0;
+	main_array[i*6+5] = 0.0;
+	main_array[0]++;
+	neighbors[i-2][0]++;
+	neighbors[i-4][0]++;
+	neighbors[i-6][0]++;
+	neighbors[i-2][4] = i;
+	neighbors[i-4][5] = i;
+	neighbors[i-6][6] = i;
+	neighbors[i][0] = 3;
+	neighbors[i][1] = i-2;
+	neighbors[i][2] = i-4;
+	neighbors[i][3] = i-6;
 	return 1;
 }
 
@@ -358,7 +420,11 @@ int add2 (double main_array[], double average_radius, double shell, int neighbor
 	{
 		double xi = main_array[i*6+3];
 		double yi = main_array[i*6+4];
-		if ((xi-xp)*(xi-xp)+(yi-yp)*(yi-yp) < 12*(average_radius+shell)*(average_radius+shell))
+		double ri = main_array[i*6+2];
+		//В список ближайших соседей попадают частицы, удалённые от данной на расстояние,
+		//не превышающее сумму радиусов наших двух частиц и средний диаметр с учётом оболочки
+		double test_dist = rp+ri+shell*4.+2.*average_radius;
+		if ((xi-xp)*(xi-xp)+(yi-yp)*(yi-yp) <= test_dist * test_dist)
 		{
 			neighbors[i][0]++;
 			neighbors[p][0]++;
@@ -370,7 +436,7 @@ int add2 (double main_array[], double average_radius, double shell, int neighbor
 			neighbors[i][neighbors[i][0]] = p;
 			neighbors[p][neighbors[p][0]] = i;
 		}
-		if ((xi-xp)*(xi-xp)+(yi-yp)*(yi-yp) < 40*(average_radius+shell)*(average_radius+shell))
+		if ((xi-xp)*(xi-xp)+(yi-yp)*(yi-yp) <= 2.*test_dist * test_dist)
 		{
 			neighbors2[i][0]++;
 			neighbors2[p][0]++;
@@ -510,8 +576,9 @@ int add3 (double main_array[], double average_radius, double shell, int neighbor
 		double xi = main_array[i*6+3];
 		double yi = main_array[i*6+4];
 		double zi = main_array[i*6+5];
-		if ((xi-xp)*(xi-xp)+(yi-yp)*(yi-yp)+(zi-zp)*(zi-zp)
-				< 12*(average_radius+shell)*(average_radius+shell))
+		double ri = main_array[i*6+2];
+		double test_dist = rp+ri+shell*4.+average_radius*2.;
+		if ((xi-xp)*(xi-xp)+(yi-yp)*(yi-yp)+(zi-zp)*(zi-zp) <= test_dist*test_dist)
 		{
 			neighbors[i][0]++;
 			neighbors[p][0]++;
@@ -535,8 +602,7 @@ int add3 (double main_array[], double average_radius, double shell, int neighbor
 			neighbors[i][neighbors[i][0]] = p;
 			neighbors[p][neighbors[p][0]] = i;
 		}
-		if ((xi-xp)*(xi-xp)+(yi-yp)*(yi-yp)+(zi-zp)*(zi-zp)
-				< 40*(average_radius+shell)*(average_radius+shell))
+		if ((xi-xp)*(xi-xp)+(yi-yp)*(yi-yp)+(zi-zp)*(zi-zp) <= 2*test_dist*test_dist)
 		{
 			neighbors2[i][0]++;
 			neighbors2[p][0]++;

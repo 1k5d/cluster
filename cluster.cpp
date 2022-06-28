@@ -43,6 +43,7 @@ int main (int argc, char* argv[])
 	//[i][1] элемент: номер первого соседа у частицы с номером i
 	//...
 	//[i][...] номер последнего элемента равен [i][0] элементу: номер последнего соседа у частицы i
+	//Возбуждение передаётся на одну из частиц из этого списка
 	static int neighbors[number_of_dots][N1];
 
 	//Этот массив устроен аналогично предыдущему, только список соседей немного расширен
@@ -99,7 +100,7 @@ int main (int argc, char* argv[])
 
 			//Генерация кластера
 			//В одномерном случае кластер генерируется заново для каждой траектории
-			generate_cluster (main_array, average_radius, shell, neighbors, neighbors2);
+			generate_cluster (main_array, average_radius, shell, neighbors, neighbors2, values);
 
 			//Инициация возбуждения на частицу с номером 0
 			init_probabilities (main_array, 0);
@@ -131,7 +132,7 @@ int main (int argc, char* argv[])
 
 		//Генерация кластера
 		//Для размерности 2 и 3 кластер генерируется 1 раз
-		generate_cluster (main_array, average_radius, shell, neighbors, neighbors2);
+		generate_cluster (main_array, average_radius, shell, neighbors, neighbors2, values);
 
 		//100.000 число траекторий для размерности 2 и 3
 		for (int i = 0; i < 100000; i++)
