@@ -6,18 +6,18 @@
 
 //#define dimension 1
 //#define number_of_dots 1000
-//#define N1 6
-//#define N2 6
+//#define N1 7
+//#define N2 7
 
-#define dimension 2
-#define number_of_dots 100000
-#define N1 40
-#define N2 300
-
-//#define dimension 3
-//#define number_of_dots 1000000
+//#define dimension 2
+//#define number_of_dots 100000
 //#define N1 40
 //#define N2 300
+
+#define dimension 3
+#define number_of_dots 1000000
+#define N1 100
+#define N2 300
 
 int read_input (double values[])
 {
@@ -135,7 +135,7 @@ int generate_cluster (double main_array[], double average_radius, double shell, 
 		}
 	}
 	fclose (fpdb);
-	//std::cout << "generate cluster finished for " << time(NULL)-t0 << " sec" << std::endl;
+	std::cout << "Кластер создан за " << time(NULL)-t0 << " сек." << std::endl;
 	return 0;
 }
 
@@ -423,7 +423,7 @@ int add2 (double main_array[], double average_radius, double shell, int neighbor
 		double ri = main_array[i*6+2];
 		//В список ближайших соседей попадают частицы, удалённые от данной на расстояние,
 		//не превышающее сумму радиусов наших двух частиц и средний диаметр с учётом оболочки
-		double test_dist = rp+ri+shell*4.+2.*average_radius;
+		double test_dist = rp+ri+shell*3.+average_radius;
 		if ((xi-xp)*(xi-xp)+(yi-yp)*(yi-yp) <= test_dist * test_dist)
 		{
 			neighbors[i][0]++;
@@ -436,7 +436,8 @@ int add2 (double main_array[], double average_radius, double shell, int neighbor
 			neighbors[i][neighbors[i][0]] = p;
 			neighbors[p][neighbors[p][0]] = i;
 		}
-		if ((xi-xp)*(xi-xp)+(yi-yp)*(yi-yp) <= 2.*test_dist * test_dist)
+		//test_dist = rp+ri+shell*4.+2*average_radius;
+		if ((xi-xp)*(xi-xp)+(yi-yp)*(yi-yp) <= test_dist * test_dist)
 		{
 			neighbors2[i][0]++;
 			neighbors2[p][0]++;
@@ -577,7 +578,7 @@ int add3 (double main_array[], double average_radius, double shell, int neighbor
 		double yi = main_array[i*6+4];
 		double zi = main_array[i*6+5];
 		double ri = main_array[i*6+2];
-		double test_dist = rp+ri+shell*4.+average_radius*2.;
+		double test_dist = rp+ri+shell*3.+average_radius;
 		if ((xi-xp)*(xi-xp)+(yi-yp)*(yi-yp)+(zi-zp)*(zi-zp) <= test_dist*test_dist)
 		{
 			neighbors[i][0]++;
@@ -602,7 +603,8 @@ int add3 (double main_array[], double average_radius, double shell, int neighbor
 			neighbors[i][neighbors[i][0]] = p;
 			neighbors[p][neighbors[p][0]] = i;
 		}
-		if ((xi-xp)*(xi-xp)+(yi-yp)*(yi-yp)+(zi-zp)*(zi-zp) <= 2*test_dist*test_dist)
+		//test_dist = rp+ri+shell*4.+average_radius*2;
+		if ((xi-xp)*(xi-xp)+(yi-yp)*(yi-yp)+(zi-zp)*(zi-zp) <= test_dist*test_dist)
 		{
 			neighbors2[i][0]++;
 			neighbors2[p][0]++;
@@ -821,34 +823,34 @@ void go_probabilities (double main_array[], int neighbors[][N1], double rf6[], d
 	peak_f /= number_of_dots;
 
 	//Вычисляем положение пика спектра люминесценции нанокластера
-	//В каждый момент времени (из 2000) возбуждение находится на одной НЧ, поэтому
+	//В каждый момент времени (из 5000)! возбуждение находится на одной НЧ, поэтому
 	//спектр нанокластера определяется радиусом только этой частицы, поэтому нужен массив
-	double peak_g[2000];
-	double std_peak_g[5000], std_delta_peak_fg[5000];
+	double peak_g[5000];//!
+	double std_peak_g[10000], std_delta_peak_fg[10000];
 
-	double ksi2[2000], time[2000], time_step;
+	double ksi2[5000], time[5000], time_step;//!
 	int i, j = 1, np;
 	ksi2[0] = 0.;
 	time[0] = 0.;
-	for (i = 1; i < 2000; i++)
+	for (i = 1; i < 5000; i++)//!
 	{
 		ksi2[i] = 0.;
 		time[i] = 1000000.+i;
 	}
-	double std_time[5000], std_ksi2[5000], std_step = 1.e-11;
-	for (i = 0; i < 5000; i++)
+	double std_time[10000], std_ksi2[10000], std_step = 5.e-12;
+	for (i = 0; i < 10000; i++)
 	{
 		std_time[i] = i*std_step;
 		std_ksi2[i] = 0.;
 	}
-	for (i = 1; i < 2000; i++)
+	for (i = 1; i < 5000; i++)//!
 	{
 		time_step = step_probabilities (main_array, neighbors, rf6, k0, phi, cdse);
 		//if (i < 5)
 			//std::cout << time_step << std::endl;
 		if (time_step < 1e-20)
 		{
-			while (i < 2000)
+			while (i < 5000)//!
 			{
 				ksi2[i] = ksi2[i-1];
 				i++;
@@ -865,18 +867,18 @@ void go_probabilities (double main_array[], int neighbors[][N1], double rf6[], d
 		peak_g[i] = 1/((1 + 2.414/2/main_array[6*np+2]) / 1035 - 0.000039);
 	}
 	//time[999] = 10000000.;
-	for (i = 1; i < 5000; i++)
+	for (i = 1; i < 10000; i++)
 	{
 		while (std_time[i] > time[j])
 		{
 			j++;
-			if (j == 2000)
+			if (j == 5000)//!
 			{
 				//std::cout << std_time[i] << "; " << time[j-1] << std::endl;
 				break;
 			}
 		}
-		if (j == 2000)
+		if (j == 5000)//!
 		{
 			break;
 		}

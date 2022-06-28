@@ -2,6 +2,7 @@
 
 int main (int argc, char* argv[])
 {
+	double t0 = time(NULL);
 	//Проверяем наличие файла "cluster.inp" и читаем из него данные в массив values
 	double values[7];
 	if (read_input (values))
@@ -70,8 +71,8 @@ int main (int argc, char* argv[])
 	//смещения, но всем остальным шагам приписывается это последнее смещение вместо 0. В итоге
 	//смещение монотонно возрастает, постепенно выходя на плато.
 	//Начальные значения массива равны 0
-	double all_ksi2[5000], all_delta_peak_fg[5000];
-	for (int i = 0; i < 5000; i++)
+	double all_ksi2[10000], all_delta_peak_fg[10000];
+	for (int i = 0; i < 10000; i++)
 	{
 		all_ksi2[i] = 0.;
 		all_delta_peak_fg[i] = 0.;
@@ -158,7 +159,7 @@ int main (int argc, char* argv[])
 	}
 
 	//Делим среднеквадратичное смещение на количество траекторий, по которым усредняли
-	//100.000.000 для одномерного случая
+	//10.000.000 для одномерного случая
 	//100.000 для размерности 2 и 3
 	FILE *fksi2, *fdelta;
 	if ((fksi2 = fopen (name_file_ksi2, "wt")) == NULL)
@@ -169,7 +170,7 @@ int main (int argc, char* argv[])
 	{
 		std::cout << "File " << name_file_delta << " is not created" << std::endl;
 	}
-	for (int i = 1; i < 5000; i++)
+	for (int i = 1; i < 10000; i++)
 	{
 		if (dimension > 1)
 		{
@@ -190,15 +191,14 @@ int main (int argc, char* argv[])
 		//0.0001 переводит кв.нм в десятки тысяч кв.нм (шкала от 0 до 3 дес.тыс. кв.нм.)
 		if (all_ksi2[i] && (i%4 == 0) && i>11)
 		{
-			fprintf (fksi2, "%f %f\n", i*1e-3, all_ksi2[i]*1e-4);
-			fprintf (fdelta, "%f %f\n", i*1e-3, all_delta_peak_fg[i]);
-			//std::cout << i*1e-3 << " " << all_ksi2[i]*1e-4 << " "
-				//<< all_delta_peak_fg[i]*1e4 << std::endl;
+			fprintf (fksi2, "%f %f\n", i*5e-4, all_ksi2[i]*1e-4);
+			fprintf (fdelta, "%f %f\n", i*5e-4, all_delta_peak_fg[i]);
 		}
 	}
 	fclose (fksi2);
 	fclose (fdelta);
 
 	//Завершение работы программы
+	std::cout << "Время работы программы " << time(NULL)-t0 << " сек." << std::endl;
 	return 0;
 }
