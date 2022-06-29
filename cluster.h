@@ -15,9 +15,9 @@
 //#define N2 300
 
 #define dimension 3
-#define number_of_dots 1000000
+#define number_of_dots 2000000
 #define N1 100
-#define N2 300
+#define N2 100
 
 int read_input (double values[])
 {
