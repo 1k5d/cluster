@@ -4,20 +4,20 @@
 #include <ctime>
 #include <string>
 
-//#define dimension 1
-//#define number_of_dots 1000
-//#define N1 7
-//#define N2 7
+#define dimension 1
+#define number_of_dots 200
+#define N1 7
+#define N2 7
 
 //#define dimension 2
 //#define number_of_dots 100000
 //#define N1 40
 //#define N2 300
 
-#define dimension 3
-#define number_of_dots 2000000
-#define N1 100
-#define N2 100
+//#define dimension 3
+//#define number_of_dots 2000000
+//#define N1 100
+//#define N2 100
 
 int read_input (double values[])
 {
@@ -289,7 +289,7 @@ int add1 (double main_array[], double shell, int neighbors[][N1])
 	}
 	i = main_array[0];
 	//Вторая из добавляемых частиц пристраивается слева от самой левой частицы
-	main_array[i*6+3] = -main_array[(i-2)*6+3]-main_array[(i-2)*6+2]-main_array[i*6+2]-shell*2.;
+	main_array[i*6+3] = main_array[(i-2)*6+3]-main_array[(i-2)*6+2]-main_array[i*6+2]-shell*2.;
 	main_array[i*6+4] = 0.0;
 	main_array[i*6+5] = 0.0;
 	main_array[0]++;
