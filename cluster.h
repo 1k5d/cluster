@@ -3,6 +3,8 @@
 #include <iostream>
 #include <ctime>
 #include <string>
+#include <sstream>
+#include <cstring>
 
 //#define dimension 1
 //#define number_of_dots 200
@@ -49,7 +51,7 @@ int read_input (double values[])
 	return 0;
 }
 
-int generate_dots (double main_array[], double average_radius, double sigma, double cdse)
+int generate_dots (double main_array[], double average_radius, double sigma, double cdse, int seed)
 {
 	double r_min, r_max;
 	if (cdse > 0.5)
@@ -63,8 +65,8 @@ int generate_dots (double main_array[], double average_radius, double sigma, dou
 		r_max = 1.996367;
 	}
 	sigma *= average_radius*0.01;
-	srand(time(NULL));
-	std::default_random_engine dre(time(NULL));
+	srand(time(NULL)+seed);
+	std::default_random_engine dre(time(NULL)+100*seed);
 	for (int i = 2; i < number_of_dots*6+2; i+=6)
 	{
 		std::normal_distribution<double> norm_distr(average_radius, sigma);
@@ -125,9 +127,16 @@ int generate_cluster (double main_array[], double average_radius, double shell, 
 		while (add3 (main_array, average_radius, shell, neighbors, neighbors2));
 	}
 	FILE *fpdb;
-	char name_file_pdb[100];
-	sprintf (name_file_pdb, "pdb-dim=%d-r=%.3f-sig=%.0f-l=%.1f-k=%.0f-phi=%.1f-vphi=%.3f.pdb", dimension, values[0], values[1], values[2], values[3], values[4], values[5]);
-	if ((fpdb = fopen (name_file_pdb, "wt")) != NULL)
+	std::ostringstream name_file_pdb_o;
+	name_file_pdb_o << "pdb-dim=" << dimension
+			<< "-r=" << values[0]
+			<< "-sig=" << values[1]
+			<< "-l=" << values[2]
+			<< "-k=" << values[3]
+			<< "-phi=" << values[4]
+			<< "-vphi=" << values[5] << ".pdb";
+	std::string name_file_pdb = name_file_pdb_o.str();
+	if ((fpdb = fopen (name_file_pdb.c_str(), "wt")) != NULL)
 	{
 		for (int i = 0; i < main_array[0]; i++)
 		{

@@ -19,9 +19,27 @@ int main (int argc, char* argv[])
 	double phi = values[4]; //Квантовый выход частиц
 	double vphi = values[5]; //Доля люминесцирующих частиц
 	double cdse = values[6]; //1, если изучаем CdSe, 0 если нет
-	char name_file_ksi2[100], name_file_delta[100];
-	sprintf (name_file_ksi2, "ksi2-dim=%d-r=%.3f-sig=%.0f-l=%.1f-k=%.0f-phi=%.1f-vphi=%.3f.txt", dimension, values[0], values[1], values[2], values[3], values[4], values[5]);
-	sprintf (name_file_delta, "delta-dim=%d-r=%.3f-sig=%.0f-l=%.1f-k=%.0f-phi=%.1f-vphi=%.3f.txt", dimension, values[0], values[1], values[2], values[3], values[4], values[5]);
+	std::ostringstream name_file_ksi2_o, name_file_delta_o;
+	name_file_ksi2_o << "ksi2-dim=" << dimension
+			<< "-r=" << values[0]
+			<< "-sig=" << values[1]
+			<< "-l=" << values[2]
+			<< "-k=" << values[3]
+			<< "-phi=" << values[4]
+			<< "-vphi=" << values[5] << ".txt";
+	name_file_delta_o << "delta-dim=" << dimension
+			<< "-r=" << values[0]
+			<< "-sig=" << values[1]
+			<< "-l=" << values[2]
+			<< "-k=" << values[3]
+			<< "-phi=" << values[4]
+			<< "-vphi=" << values[5] << ".txt";
+	std::string name_file_ksi2 = name_file_ksi2_o.str();
+	std::string name_file_delta = name_file_delta_o.str();
+	std::cout << name_file_ksi2 << std::endl;
+	return 0;
+	//sprintf (name_file_ksi2, "ksi2-dim=%d-r=%.3f-sig=%.0f-l=%.1f-k=%.0f-phi=%.1f-vphi=%.3f.txt", dimension, values[0], values[1], values[2], values[3], values[4], values[5]);
+	//sprintf (name_file_delta, "delta-dim=%d-r=%.3f-sig=%.0f-l=%.1f-k=%.0f-phi=%.1f-vphi=%.3f.txt", dimension, values[0], values[1], values[2], values[3], values[4], values[5]);
 
 	//Главный массив с координатами всех частиц, радиусами, номером частицы с возбуждением
 	//Структура массива
@@ -97,7 +115,7 @@ int main (int argc, char* argv[])
 		{
 			//Генерация радиусов всех частиц.
 			//В одномерном случае происходит новая генерация радиусов на каждой траектории
-			generate_dots (main_array, average_radius, sigma, cdse);
+			generate_dots (main_array, average_radius, sigma, cdse, i);
 
 			//Генерация кластера
 			//В одномерном случае кластер генерируется заново для каждой траектории
@@ -129,7 +147,7 @@ int main (int argc, char* argv[])
 	{
 		//Генерация радиусов всех частиц
 		//Для размерности 2 и 3 происходит генерация радиусов 1 раз
-		generate_dots (main_array, average_radius, sigma, cdse);
+		generate_dots (main_array, average_radius, sigma, cdse, 0);
 
 		//Генерация кластера
 		//Для размерности 2 и 3 кластер генерируется 1 раз
@@ -162,11 +180,11 @@ int main (int argc, char* argv[])
 	//10.000.000 для одномерного случая
 	//100.000 для размерности 2 и 3
 	FILE *fksi2, *fdelta;
-	if ((fksi2 = fopen (name_file_ksi2, "wt")) == NULL)
+	if ((fksi2 = fopen (name_file_ksi2.c_str(), "wt")) == NULL)
 	{
 		std::cout << "File " << name_file_ksi2 << " is not created" << std::endl;
 	}
-	if ((fdelta = fopen (name_file_delta, "wt")) == NULL)
+	if ((fdelta = fopen (name_file_delta.c_str(), "wt")) == NULL)
 	{
 		std::cout << "File " << name_file_delta << " is not created" << std::endl;
 	}
