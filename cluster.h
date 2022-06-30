@@ -6,20 +6,20 @@
 #include <sstream>
 #include <cstring>
 
-//#define dimension 1
-//#define number_of_dots 200
-//#define N1 7
-//#define N2 7
+#define dimension 1
+#define number_of_dots 200
+#define N1 7
+#define N2 7
 
 //#define dimension 2
 //#define number_of_dots 100000
 //#define N1 40
 //#define N2 100
 
-#define dimension 3
-#define number_of_dots 2000000
-#define N1 100
-#define N2 100
+//#define dimension 3
+//#define number_of_dots 2000000
+//#define N1 100
+//#define N2 100
 
 int read_input (double values[])
 {
@@ -843,6 +843,7 @@ void go_probabilities (double main_array[], int neighbors[][N1], double rf6[], d
 	int i, j = 1, np;
 	ksi2[0] = 0.;
 	time[0] = 0.;
+	peak_g[0] = 1./((1. + 2.414/2./main_array[2]) / 1035. - 0.000039);
 	for (i = 1; i < 5000; i++)//!
 	{
 		ksi2[i] = 0.;
@@ -857,8 +858,6 @@ void go_probabilities (double main_array[], int neighbors[][N1], double rf6[], d
 	for (i = 1; i < 5000; i++)//!
 	{
 		time_step = step_probabilities (main_array, neighbors, rf6, k0, phi, cdse);
-		//if (i < 5)
-			//std::cout << time_step << std::endl;
 		if (time_step < 1e-20)
 		{
 			while (i < 5000)//!
@@ -875,9 +874,8 @@ void go_probabilities (double main_array[], int neighbors[][N1], double rf6[], d
 			+ main_array[6*np+5]*main_array[6*np+5];//Размерность кв.нанометры
 		//Здесь вычисляем пик люминесценции НЧ, на которой сейчас возбуждение
 		//Размерность нанометры
-		peak_g[i] = 1/((1 + 2.414/2/main_array[6*np+2]) / 1035 - 0.000039);
+		peak_g[i] = 1./((1. + 2.414/2./main_array[6*np+2]) / 1035. - 0.000039);
 	}
-	//time[999] = 10000000.;
 	for (i = 1; i < 10000; i++)
 	{
 		while (std_time[i] > time[j])
@@ -885,7 +883,6 @@ void go_probabilities (double main_array[], int neighbors[][N1], double rf6[], d
 			j++;
 			if (j == 5000)//!
 			{
-				//std::cout << std_time[i] << "; " << time[j-1] << std::endl;
 				break;
 			}
 		}
@@ -900,7 +897,6 @@ void go_probabilities (double main_array[], int neighbors[][N1], double rf6[], d
 			+(std_time[i]-time[j-1])*(peak_g[j]-peak_g[j-1])/(time[j]-time[j-1]);
 		std_delta_peak_fg[i] = std_peak_g[i] - peak_f;
 		all_delta_peak_fg[i] += std_delta_peak_fg[i];
-		//std::cout << "time_j = " << time[j] << std::endl;
 	}
 }
 
