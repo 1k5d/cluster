@@ -36,10 +36,6 @@ int main (int argc, char* argv[])
 			<< "-vphi=" << values[5] << ".txt";
 	std::string name_file_ksi2 = name_file_ksi2_o.str();
 	std::string name_file_delta = name_file_delta_o.str();
-	std::cout << name_file_ksi2 << std::endl;
-	return 0;
-	//sprintf (name_file_ksi2, "ksi2-dim=%d-r=%.3f-sig=%.0f-l=%.1f-k=%.0f-phi=%.1f-vphi=%.3f.txt", dimension, values[0], values[1], values[2], values[3], values[4], values[5]);
-	//sprintf (name_file_delta, "delta-dim=%d-r=%.3f-sig=%.0f-l=%.1f-k=%.0f-phi=%.1f-vphi=%.3f.txt", dimension, values[0], values[1], values[2], values[3], values[4], values[5]);
 
 	//Главный массив с координатами всех частиц, радиусами, номером частицы с возбуждением
 	//Структура массива
@@ -111,7 +107,7 @@ int main (int argc, char* argv[])
 	if (dimension == 1)
 	{
 		//10.000.000 траекторий для линейного кластера
-		for (int i = 0; i < 10000000; i++)
+		for (int i = 0; i < 100000; i++)
 		{
 			//Генерация радиусов всех частиц.
 			//В одномерном случае происходит новая генерация радиусов на каждой траектории
@@ -126,7 +122,7 @@ int main (int argc, char* argv[])
 
 			//Покраска доли частиц в чёрный цвет (нелюминесцирующие частицы)
 			//Доля белых частиц равна vphi
-			init_black (main_array, vphi);
+			init_black (main_array, vphi, i);
 
 			//Прогон возбуждения по массиву на заданное число шагов
 			//Если возбуждение погибает раньше, то среднеквадратичное смещение фиксируется
@@ -134,11 +130,11 @@ int main (int argc, char* argv[])
 			//По мере накопления траекторий постепенно заполняется массив all_ksi2
 			if (cdse > 0.5)
 			{
-				go_probabilities (main_array, neighbors, rf6_cdse, all_ksi2, k0, phi, cdse, all_delta_peak_fg);
+				go_probabilities (main_array, neighbors, rf6_cdse, all_ksi2, k0, phi, cdse, all_delta_peak_fg, i);
 			}
 			else
 			{
-				go_probabilities (main_array, neighbors, rf6_inp, all_ksi2, k0, phi, cdse, all_delta_peak_fg);
+				go_probabilities (main_array, neighbors, rf6_inp, all_ksi2, k0, phi, cdse, all_delta_peak_fg, i);
 			}
 		}
 	}
@@ -161,23 +157,23 @@ int main (int argc, char* argv[])
 
 			//Покраска доли частиц в чёрный цвет (нелюминесцирующие частицы)
 			//Доля белых частиц равна vphi
-			init_black (main_array, vphi);
+			init_black (main_array, vphi, i);
 
 			if (cdse > 0.5)
 			{
 				//Работа этой функции аналогична одномерному случаю
-				go_probabilities (main_array, neighbors, rf6_cdse, all_ksi2, k0, phi, cdse, all_delta_peak_fg);
+				go_probabilities (main_array, neighbors, rf6_cdse, all_ksi2, k0, phi, cdse, all_delta_peak_fg, i);
 			}
 			else
 			{
 				//Работа этой функции аналогична одномерному случаю
-				go_probabilities (main_array, neighbors, rf6_inp, all_ksi2, k0, phi, cdse, all_delta_peak_fg);
+				go_probabilities (main_array, neighbors, rf6_inp, all_ksi2, k0, phi, cdse, all_delta_peak_fg, i);
 			}
 		}
 	}
 
 	//Делим среднеквадратичное смещение на количество траекторий, по которым усредняли
-	//10.000.000 для одномерного случая
+	//100.000 для одномерного случая
 	//100.000 для размерности 2 и 3
 	FILE *fksi2, *fdelta;
 	if ((fksi2 = fopen (name_file_ksi2.c_str(), "wt")) == NULL)
@@ -197,8 +193,8 @@ int main (int argc, char* argv[])
 		}
 		else
 		{
-			all_ksi2[i] *= 1e-7;
-			all_delta_peak_fg[i] *= 1e-7;
+			all_ksi2[i] *= 1e-5;
+			all_delta_peak_fg[i] *= 1e-5;
 		}
 
 		//Печать значений

@@ -6,20 +6,20 @@
 #include <sstream>
 #include <cstring>
 
-//#define dimension 1
-//#define number_of_dots 200
-//#define N1 7
-//#define N2 7
+#define dimension 1
+#define number_of_dots 200
+#define N1 7
+#define N2 7
 
 //#define dimension 2
 //#define number_of_dots 100000
 //#define N1 40
 //#define N2 100
 
-#define dimension 3
-#define number_of_dots 2000000
-#define N1 100
-#define N2 100
+//#define dimension 3
+//#define number_of_dots 2000000
+//#define N1 100
+//#define N2 100
 
 int read_input (double values[])
 {
@@ -798,8 +798,9 @@ int init_probabilities (double main_array[], int p_initial)
 	return 0;
 }
 
-int init_black (double main_array[], double vphi)
+int init_black (double main_array[], double vphi, int seed)
 {
+	srand(time(NULL)+seed);
 	for (int i = 0; i < main_array[0]; i++)
 	{
 		if ((double)rand()/RAND_MAX > vphi)
@@ -817,8 +818,9 @@ int init_black (double main_array[], double vphi)
 }
 
 double step_probabilities (double main_array[], int neighbors[][N1], double rf6[], double k0, double phi, double cdse);
-void go_probabilities (double main_array[], int neighbors[][N1], double rf6[], double all_ksi2[], double k0, double phi, double cdse, double all_delta_peak_fg[])
+void go_probabilities (double main_array[], int neighbors[][N1], double rf6[], double all_ksi2[], double k0, double phi, double cdse, double all_delta_peak_fg[], int seed)
 {
+	srand(time(NULL)+seed);
 	//Вычисляем положение пика спектра поглощения всего нанокластера
 	//Суммируем пики поглощения всех НЧ и усредняем
 	//Пик поглощения НЧ находим исходя из её радиуса по формуле
