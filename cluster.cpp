@@ -106,7 +106,7 @@ int main (int argc, char* argv[])
 	//Если размерность 1
 	if (dimension == 1)
 	{
-		//10.000.000 траекторий для линейного кластера
+		//100.000 траекторий для линейного кластера
 		for (int i = 0; i < 100000; i++)
 		{
 			//Генерация радиусов всех частиц.
@@ -149,8 +149,8 @@ int main (int argc, char* argv[])
 		//Для размерности 2 и 3 кластер генерируется 1 раз
 		generate_cluster (main_array, average_radius, shell, neighbors, neighbors2, values);
 
-		//100.000 число траекторий для размерности 2 и 3
-		for (int i = 0; i < 100000; i++)
+		//10.000 число траекторий для размерности 2 и 3
+		for (int i = 0; i < 10000; i++)
 		{
 			//Работа этой функции аналогична одномерному случаю
 			init_probabilities (main_array, 0);
@@ -174,7 +174,7 @@ int main (int argc, char* argv[])
 
 	//Делим среднеквадратичное смещение на количество траекторий, по которым усредняли
 	//100.000 для одномерного случая
-	//100.000 для размерности 2 и 3
+	//10.000 для размерности 2 и 3
 	FILE *fksi2, *fdelta;
 	if ((fksi2 = fopen (name_file_ksi2.c_str(), "wt")) == NULL)
 	{
@@ -188,8 +188,8 @@ int main (int argc, char* argv[])
 	{
 		if (dimension > 1)
 		{
-			all_ksi2[i] *= 1e-5;
-			all_delta_peak_fg[i] *= 1e-5;
+			all_ksi2[i] *= 1e-4;
+			all_delta_peak_fg[i] *= 1e-4;
 		}
 		else
 		{

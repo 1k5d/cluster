@@ -6,20 +6,20 @@
 #include <sstream>
 #include <cstring>
 
-#define dimension 1
-#define number_of_dots 200
-#define N1 7
-#define N2 7
+//#define dimension 1
+//#define number_of_dots 200
+//#define N1 7
+//#define N2 7
 
 //#define dimension 2
 //#define number_of_dots 100000
 //#define N1 40
 //#define N2 100
 
-//#define dimension 3
-//#define number_of_dots 2000000
-//#define N1 100
-//#define N2 100
+#define dimension 3
+#define number_of_dots 2000000
+#define N1 100
+#define N2 100
 
 int read_input (double values[])
 {
