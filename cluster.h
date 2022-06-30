@@ -4,20 +4,20 @@
 #include <ctime>
 #include <string>
 
-#define dimension 1
-#define number_of_dots 200
-#define N1 7
-#define N2 7
+//#define dimension 1
+//#define number_of_dots 200
+//#define N1 7
+//#define N2 7
 
 //#define dimension 2
 //#define number_of_dots 100000
 //#define N1 40
-//#define N2 300
-
-//#define dimension 3
-//#define number_of_dots 2000000
-//#define N1 100
 //#define N2 100
+
+#define dimension 3
+#define number_of_dots 2000000
+#define N1 100
+#define N2 100
 
 int read_input (double values[])
 {
@@ -126,7 +126,7 @@ int generate_cluster (double main_array[], double average_radius, double shell, 
 	}
 	FILE *fpdb;
 	char name_file_pdb[100];
-	sprintf (name_file_pdb, "pdb-dim=%d-r=%.3f-sig=%.0f-l=%.0f-k=%.0f-phi=%.1f-vphi=%.2f.pdb", dimension, values[0], values[1], values[2], values[3], values[4], values[5]);
+	sprintf (name_file_pdb, "pdb-dim=%d-r=%.3f-sig=%.0f-l=%.1f-k=%.0f-phi=%.1f-vphi=%.3f.pdb", dimension, values[0], values[1], values[2], values[3], values[4], values[5]);
 	if ((fpdb = fopen (name_file_pdb, "wt")) != NULL)
 	{
 		for (int i = 0; i < main_array[0]; i++)

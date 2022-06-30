@@ -20,8 +20,8 @@ int main (int argc, char* argv[])
 	double vphi = values[5]; //Доля люминесцирующих частиц
 	double cdse = values[6]; //1, если изучаем CdSe, 0 если нет
 	char name_file_ksi2[100], name_file_delta[100];
-	sprintf (name_file_ksi2, "ksi2-dim=%d-r=%.3f-sig=%.0f-l=%.0f-k=%.0f-phi=%.1f-vphi=%.2f.txt", dimension, values[0], values[1], values[2], values[3], values[4], values[5]);
-	sprintf (name_file_delta, "delta-dim=%d-r=%.3f-sig=%.0f-l=%.0f-k=%.0f-phi=%.1f-vphi=%.2f.txt", dimension, values[0], values[1], values[2], values[3], values[4], values[5]);
+	sprintf (name_file_ksi2, "ksi2-dim=%d-r=%.3f-sig=%.0f-l=%.1f-k=%.0f-phi=%.1f-vphi=%.3f.txt", dimension, values[0], values[1], values[2], values[3], values[4], values[5]);
+	sprintf (name_file_delta, "delta-dim=%d-r=%.3f-sig=%.0f-l=%.1f-k=%.0f-phi=%.1f-vphi=%.3f.txt", dimension, values[0], values[1], values[2], values[3], values[4], values[5]);
 
 	//Главный массив с координатами всех частиц, радиусами, номером частицы с возбуждением
 	//Структура массива
